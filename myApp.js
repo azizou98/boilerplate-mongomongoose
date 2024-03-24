@@ -66,15 +66,39 @@ const createManyPeople = (arrayOfPeople, done) => {
 };
 
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
+ // hna kan lazem ndir name : kima doka mandirch personname direct as a param to find function
+
+  Person.find({name : personName})
+  .then((data)=>{
+    console.log('success finding',data);
+    done(null , data);
+  })
+  .catch((err) => {
+    console.error('Error finding people:', err);
+  });
 };
 
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({favoriteFoods:food})
+  .then((docs) => {
+    console.log('People find by food success:', docs);
+    done(null ,docs);
+  })
+  .catch((err) => {
+    console.error('Error find by food people:', err);
+  });
+  
 };
 
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById({_id:personId})
+  .then((docs) => {
+    console.log('People find by ID success:', docs);
+    done(null ,docs);
+  })
+  .catch((err) => {
+    console.error('Error find by ID people:', err);
+  });
 };
 
 const findEditThenSave = (personId, done) => {
