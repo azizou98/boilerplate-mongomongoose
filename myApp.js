@@ -1,14 +1,68 @@
 require('dotenv').config();
+mongoose = require('mongoose') ;
+require('dotenv').config();
 
+connect=process.env.MONGO_URI;
 
-let Person;
+mongoose.connect(connect, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(console.log('connect sucssufully'));
+
+PersonSchema = new mongoose.Schema({
+  name: {
+   require : true, 
+   type: String,
+  },
+  age : Number,
+  favoriteFoods : [String],
+ }
+)
+
+let Person = new mongoose.model('Person',PersonSchema);
+
+let person1= new Person({
+  name : 'aziz',
+  age : 26,
+  favoriteFoods : ['mhajeb','tacos']
+})
+
+person1.save((err, savedPerson) => {
+  if (err) {
+    console.error('Error saving person:', err);
+  } else {
+    console.log('Person saved successfully:', savedPerson);
+  }
+});
 
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  done(null , person1);
 };
 
+arrayOfPeople =[
+  {
+    name : 'aziz',
+    age : 26,
+    favoriteFoods : ['mhajeb','tacos']
+  },
+  {
+    name : 'hamza',
+    age : 96,
+    favoriteFoods : ['boyon','tacos']
+  }
+];
+
+// hna fel post req.body 
+// kayen el arrayofpeople li ra7 ypassiwha lel database
+
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+  Person.create(arrayOfPeople) 
+  .then((docs) => {
+  console.log('People saved successfully:', docs);
+  // kan lazem nhat docs li houma people fell done method callbac
+  done(null , docs);
+})
+.catch((err) => {
+  console.error('Error saving people:', err);
+});
 };
 
 const findPeopleByName = (personName, done) => {
