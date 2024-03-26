@@ -103,30 +103,65 @@ const findPersonById = (personId, done) => {
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
+  Person.findById({_id:personId})
+  .then((person)=>{
+     person.favoriteFoods.push(foodToAdd);
+     person.save()
+     .then((data)=>{console.log('save successfully',data)
+     done(null , data);
+    });
+  })
 
-  done(null /*, data*/);
 };
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
+ Person.findOneAndUpdate(
+  {name : personName},
+  {age : ageToSet},
+  {new : true}
+ )
+ .then((data)=>{
+   console.log('update successefully ',data);
+   done(null , data);
+ })
 
-  done(null /*, data*/);
 };
 
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove(personId)
+  .then((data)=>{
+    console.log('delete succeseed',data);
+    done(null , data);
+  })
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
+  Person.deleteMany(
+    {name: nameToRemove}
+  ).then(
+    (data)=>{
+    console.log('delete by names succeseed',data);
+      done(null , data);
+    }
+  )
 
-  done(null /*, data*/);
 };
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({favoriteFoods:foodToSearch}) 
+  .sort({name:1})
+  .limit(2)
+  .select('name favoriteFoods') // hna lazem ykoun binathoum space brk bla madir comma 
+  .then((data)=>{
+    console.log('querie chain succeed ',data);
+    done(null , data);
+  })
+  .catch(err=>{
+    console.log('error chaining query',err)
+  })
 };
 
 /** **Well Done !!**
